@@ -1,0 +1,407 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: analysis
+    description: Belkhayate chart analysis operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /analysis/analyze:
+    post:
+      operationId: analyzeChart
+      tags: [analysis]
+      summary: Analyze a TradingView chart screenshot using Belkhayate method
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeChartBody"
+      responses:
+        "200":
+          description: Analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /analysis/history:
+    get:
+      operationId: listAnalysisHistory
+      tags: [analysis]
+      summary: List past analyses
+      responses:
+        "200":
+          description: List of past analyses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnalysisRecord"
+
+  /analysis/history/{id}:
+    get:
+      operationId: getAnalysis
+      tags: [analysis]
+      summary: Get a specific analysis record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Analysis record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisRecord"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      operationId: deleteAnalysis
+      tags: [analysis]
+      summary: Delete an analysis record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /analysis/stats:
+    get:
+      operationId: getAnalysisStats
+      tags: [analysis]
+      summary: Get statistics about past analyses
+      responses:
+        "200":
+          description: Analysis statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisStats"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    AnalyzeChartBody:
+      type: object
+      properties:
+        imageBase64:
+          type: string
+          description: Base64-encoded image of the TradingView chart
+        asset:
+          type: string
+          description: Asset name (e.g. GC1!, NQ1!, BTC/USD)
+        timeframe:
+          type: string
+          description: Chart timeframe (e.g. 15m, 1h)
+          default: "15m"
+        mode:
+          type: string
+          enum: [SOLO, OCTOGONE]
+          description: Analysis mode
+          default: "SOLO"
+      required:
+        - imageBase64
+
+    AnalysisResult:
+      type: object
+      properties:
+        signal:
+          type: string
+          enum: [BUY, SELL, WAIT, NO_SIGNAL]
+          description: Trading signal
+        asset:
+          type: ["string", "null"]
+          description: Asset name
+        timeframe:
+          type: ["string", "null"]
+          description: Chart timeframe
+        energy:
+          $ref: "#/components/schemas/EnergyAnalysis"
+        direction:
+          $ref: "#/components/schemas/DirectionAnalysis"
+        pivots:
+          $ref: "#/components/schemas/PivotsAnalysis"
+        trade:
+          $ref: "#/components/schemas/TradeDetails"
+        missingConditions:
+          type: string
+          description: Missing conditions for signal confirmation
+        synthesis:
+          type: string
+          description: Brief synthesis of the analysis
+        rawAnalysis:
+          type: string
+          description: Full raw analysis text from AI
+        analyzedAt:
+          type: string
+          format: date-time
+        mode:
+          type: string
+          enum: [SOLO, OCTOGONE]
+          description: Analysis mode
+        tpMismatch:
+          type: boolean
+          description: Whether the AI-provided TP violated Belkhayate pivot rules
+        tpMismatchDetail:
+          type: ["string", "null"]
+          description: Detail of the TP rule violation when tpMismatch is true
+        tpCorrected:
+          type: boolean
+          description: Whether the TP was automatically corrected by the system
+      required:
+        - signal
+        - energy
+        - direction
+        - pivots
+        - synthesis
+        - rawAnalysis
+        - analyzedAt
+        - mode
+        - tpMismatch
+        - tpCorrected
+
+    EnergyAnalysis:
+      type: object
+      properties:
+        state:
+          type: string
+          description: "Barres bleues / Barres grises / Absent / Accélération"
+        intensity:
+          type: string
+          description: "Faible / Modérée / Forte"
+        divergence:
+          type: string
+          description: "Haussière / Baissière / Aucune"
+        detail:
+          type: string
+          description: Description of oscillator
+      required:
+        - state
+        - intensity
+        - divergence
+        - detail
+
+    DirectionAnalysis:
+      type: object
+      properties:
+        trend:
+          type: string
+          description: "HAUSSIÈRE / BAISSIÈRE / NEUTRE"
+        points:
+          type: string
+          description: "Verts / Rouges / En retournement"
+        bands:
+          type: string
+          description: "En expansion / En contraction / Stables"
+        springEffect:
+          type: string
+          description: "OUI / NON"
+      required:
+        - trend
+        - points
+        - bands
+        - springEffect
+
+    PivotsAnalysis:
+      type: object
+      properties:
+        currentPrice:
+          type: ["string", "null"]
+          description: Current price level
+        nearestPivot:
+          type: string
+          description: "DO / RÉ / MI / FA / SOL / LA / SI"
+        pivotType:
+          type: string
+          description: "Support / Résistance"
+        nextPivot:
+          type: string
+          description: Next pivot level
+      required:
+        - nearestPivot
+        - pivotType
+        - nextPivot
+
+    TradeDetails:
+      type: ["object", "null"]
+      properties:
+        entry:
+          type: string
+          description: Entry level or pivot
+        stopLoss:
+          type: string
+          description: Stop loss level
+        tp1:
+          type: string
+          description: Take profit 1 level
+        tp2:
+          type: string
+          description: Take profit 2 level
+
+    AnalysisRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        signal:
+          type: string
+        asset:
+          type: ["string", "null"]
+        timeframe:
+          type: ["string", "null"]
+        synthesis:
+          type: string
+        rawAnalysis:
+          type: string
+        imageBase64:
+          type: ["string", "null"]
+        energyState:
+          type: string
+        directionTrend:
+          type: string
+        nearestPivot:
+          type: string
+        entry:
+          type: ["string", "null"]
+        stopLoss:
+          type: ["string", "null"]
+        tp1:
+          type: ["string", "null"]
+        tp2:
+          type: ["string", "null"]
+        mode:
+          type: ["string", "null"]
+          enum: ["SOLO", "OCTOGONE", null]
+          description: Analysis mode
+        sessionId:
+          type: ["string", "null"]
+          description: Octogone session identifier — shared by all markets in one analysis run
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - signal
+        - synthesis
+        - rawAnalysis
+        - energyState
+        - directionTrend
+        - nearestPivot
+        - createdAt
+
+    OctogoneMacroRegime:
+      type: object
+      properties:
+        regime:
+          type: string
+        count:
+          type: integer
+      required:
+        - regime
+        - count
+
+    AnalysisStats:
+      type: object
+      properties:
+        total:
+          type: integer
+        buySignals:
+          type: integer
+        sellSignals:
+          type: integer
+        waitSignals:
+          type: integer
+        noSignals:
+          type: integer
+        todayCount:
+          type: integer
+        soloTotal:
+          type: integer
+          description: Total analyses in SOLO mode
+        octogoneTotal:
+          type: integer
+          description: Total analyses in OCTOGONE mode
+        octogoneMacroRegimes:
+          type: array
+          items:
+            $ref: "#/components/schemas/OctogoneMacroRegime"
+          description: Regime breakdown for OCTOGONE analyses
+        tpMismatchTotal:
+          type: integer
+          description: Total BUY/SELL analyses where the AI TP violated pivot rules
+        tpCorrectedTotal:
+          type: integer
+          description: Total analyses where the TP was automatically corrected
+      required:
+        - total
+        - buySignals
+        - sellSignals
+        - waitSignals
+        - noSignals
+        - todayCount
+        - soloTotal
+        - octogoneTotal
+        - octogoneMacroRegimes
+        - tpMismatchTotal
+        - tpCorrectedTotal
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

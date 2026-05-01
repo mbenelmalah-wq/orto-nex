@@ -1,0 +1,1 @@
+ALTER TABLE "analyses" ADD COLUMN IF NOT EXISTS "mode" text DEFAULT 'SOLO';

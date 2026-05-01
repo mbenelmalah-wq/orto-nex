@@ -1,0 +1,222 @@
+INSTRUCTIONS COMPLÈTES POUR L'AI DE TRADING
+Méthode Belkhayate — 3 indicateurs combinés — TradingView 15 min
+Synthèse vidéo + transcription complète
+1. LES 3 INDICATEURS — NOM EXACT & RÔLE
+#	Nom exact	Rôle
+1	Belkhayate Énergie	Oscillateur de momentum (histogramme bas)
+2	Belkhayate Direction	Canal de tendance (bandes sur le prix)
+3	Pivots Belkhayate	Niveaux de support/résistance horizontaux
+"J'espère que tu vas pouvoir comprendre le principe de combiner ces trois indicateurs : Belkhayate Direction, Belkhayate Pivot, et Belkhayate Énergie."
+
+2. BELKHAYATE ÉNERGIE — L'oscillateur de MOMENTUM
+Ce que représentent les barres
+Barres BLEUES  → Énergie VENDEUSE (pression baissière)
+Barres GRISES  → Énergie ACHETEUSE (pression haussière)
+Barres PETITES → Peu d'énergie = marché calme = NE PAS TRADER
+Barres GRANDES → Forte énergie = signal potentiel actif
+
+Règle fondamentale : QUAND IL N'Y A PAS D'ÉNERGIE, ON NE FAIT RIEN
+"Quand il n'y a pas d'énergie, on ne fait rien, on ne donne pas de signal, on dit rien, on attend qu'il y ait une accélération."
+
+if energie_bars_volume < seuil_minimum:
+    return "AUCUN SIGNAL — Attendre"
+
+Les DIVERGENCES — Signal principal
+DIVERGENCE BAISSIÈRE (signal VENTE) :
+
+"Nous avons une divergence baissière puisque l'énergie acheteuse est en train de diminuer alors que ça ne se voit pas sur le prix."
+
+Prix fait sommet PLUS HAUT ou ÉGAL au sommet précédent
+MAIS l'énergie acheteuse fait un sommet PLUS BAS
+→ De moins en moins d'acheteurs → retournement baissier imminent
+
+DIVERGENCE HAUSSIÈRE (signal ACHAT) :
+
+"L'énergie baissière c'est à dire l'énergie bleue est en train de baisser, il y a de moins en moins de vendeurs alors qu'au niveau des prix ça ne se voit pas."
+
+Prix fait creux PLUS BAS ou ÉGAL au creux précédent
+MAIS les barres bleues (énergie vendeuse) font un creux MOINS PROFOND
+→ De moins en moins de vendeurs → retournement haussier imminent
+
+Règles de lecture pour l'AI
+SI accélération soudaine des barres (volume énergie augmente fortement)
+   + barres BLEUES → signal de VENTE
+   + barres GRISES → signal d'ACHAT
+
+SI barres bleues décroissantes + prix stagne ou baisse → DIVERGENCE HAUSSIÈRE
+SI barres grises décroissantes + prix stagne ou monte → DIVERGENCE BAISSIÈRE
+
+Contexte idéal : rectangles de consolidation (double top / double bottom)
+  avant une divergence = signal très fort
+
+3. BELKHAYATE DIRECTION — Le canal de TENDANCE
+Ce qu'il affiche sur le graphique
+Points/ligne VERTS au centre de la bande  → Tendance HAUSSIÈRE (acheter)
+Points/ligne ROUGES au centre de la bande → Tendance BAISSIÈRE (vendre)
+
+Règles de la bande
+Garder une position :
+
+"On va garder la position tant que nous avons la bande qui soutient ce mouvement."
+
+SI position LONGUE  ET bande reste VERTE   → GARDER la position
+SI position COURTE  ET bande reste ROUGE   → GARDER la position
+
+L'effet ressort (rebond sur la bande) :
+
+"Lorsque le marché revient rebondir sur cette zone, on peut considérer qu'il va faire un effet ressort et il va repartir."
+
+SI prix revient toucher la bande ET points restent verts → RENFORCER ou TENIR
+SI prix revient toucher la bande ET points restent rouges → RENFORCER ou TENIR
+Ne PAS sortir sur un simple retour sur la bande si les points ne changent pas de couleur
+
+Signal de retournement :
+
+"On va attendre que les petits points deviennent rouge c'est-à-dire que Belkhayate Direction se retourne."
+
+Changement VERT → ROUGE : signal de VENTE (sortir position longue / entrer short)
+Changement ROUGE → VERT : signal d'ACHAT (sortir position courte / entrer long)
+
+4. PIVOTS BELKHAYATE — La gamme de NIVEAUX
+La structure (gamme musicale)
+"C'est une gamme : DO RÉ MI FA SOL LA SI — comme une gamme musicale."
+
+Note	Couleur	Type	Rôle
+SI	Rouge vif	Résistance extrême	Objectif de vente max
+LA	Orange	Résistance forte	Objectif intermédiaire vente
+SOL	Jaune	Résistance modérée	Zone de prudence
+FA	Noir	Pivot central neutre	Niveau clé pivot
+MI	Vert clair	Support modéré	Zone de prudence
+RÉ	Vert	Support fort	Objectif intermédiaire achat
+DO	Vert foncé	Support extrême	Objectif d'achat max
+Règles de trading avec les pivots
+Entrée sur un pivot :
+
+"Le marché vient rebondir sur le FA et partir sur le MI et RÉ."
+
+SI prix touche pivot support (DO/RÉ/MI) + signal Énergie + Direction vert  → ACHETER
+SI prix touche pivot résistance (SOL/LA/SI) + signal Énergie + Direction rouge → VENDRE
+
+Sortie sur le pivot suivant (prise de profit automatique) :
+
+"On n'a pas besoin d'attendre quelque chose — dès qu'on touche le FA on encaisse. C'est un trade gagnant parce qu'il part d'un pivot pour aller à un autre pivot."
+
+Trade haussier :  entrer sur RÉ/MI → prendre profit sur FA ou SOL
+Trade baissier :  entrer sur SOL/LA → prendre profit sur FA ou MI
+Ne PAS attendre un signal de retournement pour encaisser si le pivot cible est atteint
+
+Observation importante :
+
+"Regardez comme les marchés respectent de manière étonnante les pivots Belkhayate."
+
+Les pivots servent à la fois de support ET résistance (inversés après cassure)
+Si FA cassé à la hausse → FA devient support
+Si FA cassé à la baisse → FA devient résistance
+
+5. LOGIQUE DE DÉCISION COMPLÈTE DE L'AI
+SIGNAL D'ACHAT — 3 confirmations requises
+CONFIRMATION 1 — Énergie :
+  ✓ Divergence haussière visible (barres bleues décroissantes + prix en baisse)
+  OU accélération de l'énergie acheteuse (barres grises grandes)
+
+CONFIRMATION 2 — Niveau :
+  ✓ Prix est sur un pivot support (DO, RÉ, MI ou FA)
+  OU prix revient faire un pullback sur Belkhayate Direction (bande verte)
+
+CONFIRMATION 3 — Direction :
+  ✓ Points Belkhayate Direction sont VERTS
+  OU viennent de passer de rouge à vert
+
+→ ACTION : ACHETER
+→ Stop Loss : sous le pivot support en dessous
+→ Take Profit 1 : pivot suivant au-dessus
+→ Take Profit 2 : pivot d'après (si énergie reste forte)
+→ Tenir tant que points restent verts et énergie présente
+
+SIGNAL DE VENTE — 3 confirmations requises
+CONFIRMATION 1 — Énergie :
+  ✓ Divergence baissière visible (énergie acheteuse décroissante + prix en hausse)
+  OU accélération de l'énergie vendeuse (barres bleues grandes)
+
+CONFIRMATION 2 — Niveau :
+  ✓ Prix est sur un pivot résistance (FA, SOL, LA, SI)
+  OU prix revient faire un pullback sur Belkhayate Direction (bande rouge)
+
+CONFIRMATION 3 — Direction :
+  ✓ Points Belkhayate Direction sont ROUGES
+  OU viennent de passer de vert à rouge
+
+→ ACTION : VENDRE
+→ Stop Loss : au-dessus du pivot résistance au-dessus
+→ Take Profit 1 : pivot suivant en dessous
+→ Take Profit 2 : pivot d'après (si énergie vendeuse reste forte)
+→ Tenir tant que points restent rouges et énergie bleue présente
+
+6. RÈGLES ABSOLUES — Ce que l'AI NE doit PAS faire
+❌ Ne jamais trader si Belkhayate Énergie est faible/plat (pas d'énergie)
+❌ Ne pas sortir sur un simple rebond sur la bande si les points ne changent pas de couleur
+❌ Ne pas ignorer un retour sur la bande (c'est un effet ressort, pas un signal de sortie)
+❌ Ne pas attendre un signal de retournement pour prendre profit si le pivot cible est atteint
+❌ Ne jamais trader à contre-tendance de Belkhayate Direction
+❌ Ignorer les signaux entre deux pivots sans niveau clair proche
+
+7. FLUX DÉCISIONNEL DE L'AI (Algorithme)
+ÉTAPE 1 — FILTRE ÉNERGIE
+  └─ Belkhayate Énergie : y a-t-il une accélération ou divergence ?
+      └─ NON → STOP. Attendre. Aucun trade.
+      └─ OUI → continuer
+
+ÉTAPE 2 — DIRECTION
+  └─ Belkhayate Direction : les points sont verts ou rouges ?
+      └─ VERTS  → chercher trade ACHAT
+      └─ ROUGES → chercher trade VENTE
+
+ÉTAPE 3 — NIVEAU
+  └─ Prix est-il sur un pivot Belkhayate ?
+      └─ NON → attendre que le prix atteigne un pivot
+      └─ OUI → confirmer le type de pivot (support ou résistance)
+
+ÉTAPE 4 — ENTRÉE
+  └─ Les 3 conditions alignées ? → ENTRER le trade
+
+ÉTAPE 5 — GESTION
+  └─ Surveiller Belkhayate Direction (couleur des points)
+  └─ Surveiller les pivots suivants (Take Profit automatique à chaque pivot)
+  └─ Surveiller si énergie s'épuise (signal de sortie anticipée)
+
+ÉTAPE 6 — SORTIE
+  └─ Sortie normale : pivot cible atteint
+  └─ Sortie forcée : points changent de couleur (vert→rouge ou rouge→vert)
+  └─ Sortie partielle : première divergence opposée apparaît
+
+8. ASSETS & PARAMÈTRES
+Assets démontrés dans la vidéo :
+
+GC1! Gold Futures (COMEX)
+NQ1! Nasdaq 100 Futures (CME)
+CL1! Crude Oil Futures (NYMEX)
+ZN1! T-Note 10 ans (CBOT)
+ES1! S&P 500 Futures (CME)
+Timeframe : 15 minutes uniquement
+
+Indicateurs à chercher sur TradingView :
+
+Rechercher : "Belkhayate Energie"
+Rechercher : "Belkhayate Direction"
+Rechercher : "Belkhayate Pivot" ou "Pivots Belkhayate"
+9. RÉSUMÉ VISUEL FINAL
+┌─────────────────────────────────────────────────┐
+│              GRAPHIQUE PRIX (15 min)            │
+│  ─── SI ─── LA ─── SOL ─── FA ─── MI ─── RÉ ── │
+│  [Bandes Belkhayate Direction : vert/rouge]     │
+├─────────────────────────────────────────────────┤
+│         BELKHAYATE ÉNERGIE (oscillateur)        │
+│  ▓▓▓ Barres bleues = vendeurs                   │
+│  ░░░ Barres grises = acheteurs                  │
+│  Divergence = signal de retournement            │
+└─────────────────────────────────────────────────┘
+
+RÈGLE D'OR :
+Pivot + Direction confirmée + Énergie accélérée = TRADE
+Absence d'énergie = SILENCE TOTAL
+

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 44" height="44">
+  <!-- Three overlapping circles (icon) -->
+  <circle cx="16" cy="22" r="13" fill="rgba(255,255,255,0.30)"/>
+  <circle cx="26" cy="22" r="13" fill="rgba(255,255,255,0.55)"/>
+  <circle cx="36" cy="22" r="13" fill="rgba(255,255,255,0.92)"/>
+  <!-- Brand name -->
+  <text
+    x="56"
+    y="30"
+    font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif"
+    font-size="22"
+    font-weight="600"
+    fill="white"
+    letter-spacing="0.5"
+  >ortogonex</text>
+</svg>

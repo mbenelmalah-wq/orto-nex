@@ -1,0 +1,20 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "JMsGkjNQBz2gLM9B59Lsj"
+uri = "file://springbox-ai.tar.gz"
+type = "unspecified"
+title = "springbox-ai.tar.gz"
+
+[[outputs]]
+id = "Q_nnS6D_XXGZyKPSvAqEU"
+uri = "file://springbox-ai.zip"
+type = "unspecified"
+title = "springbox-ai.zip — Code source complet"
+
+[[outputs]]
+id = "hNFIpZMJlkp0r9tFrJj_G"
+uri = "file://ortogonex.zip"
+type = "unspecified"
+title = "ortogonex.zip — Sans connexion, prêt à importer"
