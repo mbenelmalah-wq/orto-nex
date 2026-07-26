@@ -1,0 +1,22 @@
+# node_modules contient les binaires natifs win32 de la machine de dev : les
+# copier dans une image Linux casserait le build.
+node_modules
+**/node_modules
+
+# Sorties de build, regenerees dans l'image
+dist
+**/dist
+*.tsbuildinfo
+
+.git
+.github
+
+# Secrets et scripts locaux
+.env
+.env.*
+*.bat
+
+.vscode
+.replit
+.cache
+.local
