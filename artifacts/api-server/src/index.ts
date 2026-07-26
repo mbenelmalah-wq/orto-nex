@@ -10,10 +10,10 @@ import { pool } from "@workspace/db";
 async function runStartupMigrations() {
   const client = await pool.connect();
   try {
-    await client.query(
-      `ALTER TABLE analyses ADD COLUMN IF NOT EXISTS session_id text`,
-    );
-    logger.info("Startup migration: analyses.session_id ready");
+    await client.query(`ALTER TABLE analyses ADD COLUMN IF NOT EXISTS session_id text`);
+    await client.query(`ALTER TABLE analyses ADD COLUMN IF NOT EXISTS tp_mismatch boolean NOT NULL DEFAULT false`);
+    await client.query(`ALTER TABLE analyses ADD COLUMN IF NOT EXISTS tp_mismatch_detail text`);
+    logger.info("Startup migration: analyses columns ready");
   } finally {
     client.release();
   }

@@ -110,7 +110,7 @@ export function createOctogoneAnalysisWss() {
         const screenBLabel = `IMAGE 2 — Écran B (${marketsB.join(", ")}) :`;
 
         const response = await openai.chat.completions.create({
-          model: "gpt-5.2",
+          model: process.env.OPENAI_MODEL ?? "gpt-4o",
           max_completion_tokens: 3000,
           messages: [
             { role: "system", content: OCTOGONE_FULL_SYSTEM },

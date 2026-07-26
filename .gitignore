@@ -54,5 +54,8 @@ Thumbs.db
 .env.*
 !.env.example
 
+# Scripts de lancement locaux : contiennent des secrets en clair
+*.bat
+
 # pnpm store
 .pnpm-store/

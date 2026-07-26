@@ -38,7 +38,7 @@ router.post("/analysis/analyze", async (req, res): Promise<void> => {
   }
 
   const response = await openai.chat.completions.create({
-    model: "gpt-5.2",
+    model: process.env.OPENAI_MODEL ?? "gpt-4o",
     max_completion_tokens: 8192,
     messages: [
       {
