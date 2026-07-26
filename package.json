@@ -11,6 +11,7 @@
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
   },
   "private": true,
+  "packageManager": "pnpm@10.33.2",
   "devDependencies": {
     "dotenv-cli": "^11.0.0",
     "prettier": "^3.8.1",
