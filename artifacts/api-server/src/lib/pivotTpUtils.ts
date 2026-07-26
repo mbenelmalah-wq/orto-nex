@@ -1,4 +1,4 @@
-﻿// Ordre des pivots Belkhayate du plus bas au plus haut
+// Ordre des pivots Belkhayate du plus bas au plus haut
 export const PIVOT_ORDER = ["DO", "RE", "MI", "FA", "SOL", "LA", "SI"] as const;
 export type Pivot = (typeof PIVOT_ORDER)[number];
 
